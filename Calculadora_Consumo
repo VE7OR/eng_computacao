@@ -1,1 +1,157 @@
+nome = input("Qual o seu Nome? ")
+print("Bem vindo(a) a nossa Calculadora de Consumo", nome)
+preco_khw = float(input("Quanto é o Kwh da sua região? "))
 
+while True: 
+
+    print("1 - Chuveiro")
+    print("2 - Ferro de Passar Roupa")
+    print("3 - Airfyer")
+    print ("4 - Televisão")
+    print("5 - Geladeira")
+    print ("6 - Não desejo continuar")
+    opcao = int(input("Digite o Número correspondente a opção desejada: "))
+
+    if opcao == 1: #Chuveiro
+
+        # Dados de entrada Chuveiro
+        watts_chuveiro = int(input("Quantos Watts é o Seu Chuveiro? "))
+        tempo_chuveiro_minuto = int(input("Quanto tempo (Minutos) você fica no chuveiro? "))
+        vezes_chuveiro = int(input("Quantas vezes você tomou banho no dia? "))
+        dias_chuveiro = int(input("Quantos dias você tomou banho? "))
+        preco_m3 = float(input("Quanto é o Metro Cubido (m³) de água na sua região? "))
+
+        # Função Consumo do Chuveiro no modo Verão
+        def energia_verao(watts_chuveiro, minutos):
+            # Calcula o consumo de energia em kWh
+            kWh = (watts_chuveiro / 1000) * (minutos / 60)  # Converte minutos para horas
+            return kWh
+
+        # Função Consumo do Chuveiro no modo Inverno
+        def energia_inverno(watts_chuveiro, minutos, acrescimo_percentual):
+            # Calcula o consumo original
+            consumo_original = energia_verao(watts_chuveiro, minutos)
+            # Calcula o novo consumo com o acréscimo
+            novo_consumo = consumo_original * (1 + acrescimo_percentual / 100)
+            return novo_consumo
+
+        acrescimo = 36 # Valor do acréscimo percentual para o modo inverno
+
+        consumo_verao = energia_verao(watts_chuveiro, tempo_chuveiro_minuto) #Cálculo de consumo verao
+        consumo_inverno = energia_inverno(watts_chuveiro, tempo_chuveiro_minuto, acrescimo) #Cálculo de consumo inverno
+        total_consumo_verao = consumo_verao * vezes_chuveiro * dias_chuveiro # Cálculo do consumo total verão
+        total_consumo_inverno = consumo_inverno * vezes_chuveiro * dias_chuveiro # Cálculo do consumo total inverno
+        custo_verao = total_consumo_verao * preco_khw # Cálculo do Preço verão
+        custo_inverno = total_consumo_inverno * preco_khw # Cálculo do Preço inverno
+        tempo_agua = tempo_chuveiro_minuto * vezes_chuveiro * dias_chuveiro #Função Consumo de água
+        agua_minuto = tempo_agua * 12 #Função Consumo de água (1Minuto media de 12L de água)
+        preco_agua = (agua_minuto * preco_m3) / 1000 #Função Preço da água 
+
+        # Exibe os resultados para todos os modos
+        print("Seu Chuveiro consome nos seguintes modos de uso:")
+        print(f"Verão: {total_consumo_verao:.2f} kWh e gasta R$ {custo_verao:.2f}.")
+        print(f"Inverno: {total_consumo_inverno:.2f} kWh e gasta R$ {custo_inverno:.2f}.")
+        print("Desligado: Não gasta energia.")
+
+        print(f"Você gastou {agua_minuto:2f} Litros de água")
+        print(f"Você gastou R${preco_agua:.2f} de água")
+
+    elif opcao == 2: #Ferro
+
+        #Dados de Entrada Ferro de Roupa
+        watts_ferro = int(input("Quantos Watts é o seu Ferro? "))
+        tempo_ferro_minuto = int(input("Quanto tempo (Minutos) você usa O Ferro? "))
+        dias_ferro = int(input("Quantos dias você usou o Ferro? "))
+
+        # Função Consumo do Ferro
+        def energia_ferro(watts_ferro, minutos):
+            # Calcula o consumo de energia em kWh
+            kWh = (watts_ferro / 1000) * (minutos / 60)  # Converte minutos para horas
+            return kWh
+
+        consumo_ferro = energia_ferro(watts_ferro, tempo_ferro_minuto) 
+        total_consumo_ferro = consumo_ferro * dias_ferro #Cálculo do consumo total
+        custo_ferro = total_consumo_ferro * preco_khw #Cálculo do Preço
+
+        # Exibe os resultados para todos os modos
+        print("Seu Ferro consome:")
+        print(f"{total_consumo_ferro:.2f} kWh e gasta R$ {custo_ferro:.2f}.")
+
+    elif opcao == 3: #Airfryer
+
+        #Dados de Entrada Airfryer
+        watts_air = int(input("Quantos Watts é a sua Airfryer? "))
+        tempo_air_minuto = int(input("Quanto tempo (Minutos) você usa a Airfryer? "))
+        vezes_air = int(input("Quantas vezes você usa o Airfryer no dia? "))
+        dias_air = int(input("Quantos dias você usou o Airfryer? "))
+
+        # Função Consumo do Airfryer
+        def energia_air(watts_air, minutos):
+            # Calcula o consumo de energia em kWh
+            kWh = (watts_air / 1000) * (minutos / 60)  # Converte minutos para horas
+            return kWh
+
+        consumo_air = energia_air(watts_air, tempo_air_minuto) 
+        total_consumo_air = consumo_air * vezes_air * dias_air #Cálculo do consumo total
+        custo_air = total_consumo_air * preco_khw #Cálculo do Preço
+
+        # Exibe os resultados para todos os modos
+        print("Sua Airfryer consome:")
+        print(f"{total_consumo_air:.2f} kWh e gasta R$ {custo_air:.2f}.")
+
+    elif opcao == 4: #Televisão
+
+        #Dados de Entrada Televisão
+        watts_televisao = int(input("Quantos Watts é a sua Televisão? "))
+        tempo_televisao_hora = int(input("Quanto tempo (Hora) você usa a Televisão? "))
+        vezes_televisao = int(input("Quantas vezes você usa a Televisão no dia? "))
+        dias_televisao = int(input("Quantos dias você usou a Televisão? "))
+
+        # Função Consumo da Telvisão
+        def energia_televisao(watts_televisao, horas):
+            # Calcula o consumo de energia em kWh
+            kWh = (watts_televisao / 1000) * horas
+            return kWh
+
+        consumo_televisao = energia_televisao(watts_televisao, tempo_televisao_hora)
+        total_consumo_televisao = consumo_televisao * vezes_televisao * dias_televisao #Cálculo do consumo total
+        custo_televisao = total_consumo_televisao * preco_khw #Cálculo do Preço
+
+        # Exibe os resultados para todos os modos
+        print("Sua Televisão consome:")
+        print(f"{total_consumo_televisao:.2f} kWh e gasta R$ {custo_televisao:.2f}.")
+
+    elif opcao == 5: #Geladeira
+
+        #Dados de Entrada Geladeira
+        watts_geladeira = int(input("Quantos watts é a sua Geladeira?: "))
+        tempo_geladeira_hora = int(input("Quanto tempo (Horas) sua Geladeira fica ligada? "))
+        dias_geladeira = int(input("Quantos dias fica ligada? "))
+
+        # Função Consumo da Geladeira
+        def energia_geladeira(watts_geladeira, horas):
+            # Calcula o consumo de energia em kWh
+            kWh = (watts_geladeira / 1000) * horas
+            return kWh
+
+        consumo_geladeira = energia_geladeira(watts_geladeira, tempo_geladeira_hora)
+        total_consumo_geladeira = consumo_geladeira * dias_geladeira #Cálculo do consumo total
+        custo_geladeira = total_consumo_geladeira * preco_khw #Cálculo do Preço
+
+        # Exibe os resultados para todos os modos
+        print("Sua Geladeira consome:")
+        print(f"{total_consumo_geladeira:.2f} kWh e gasta R$ {custo_geladeira:.2f}.")
+
+    elif opcao == 6: #Não continuar
+
+        print("Até a próxima", nome)
+        exit()
+
+    else:
+        print("Insira uma opção válida, tente novamente")
+
+    
+    repetir = input("Deseja fazer outra pergunta? (s/n): ").strip().lower() # Pergunta se o usuário deseja refazer
+    if repetir != 's':
+        print("Ate á proxima", nome)
+        break  # Sai do loop se o usuário não quiser continuar
