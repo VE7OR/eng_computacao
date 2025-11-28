@@ -131,7 +131,7 @@ def main():
                 pausa(f"Poxa, {nome} 😔 Sinto muito em saber disso.")
                 pausa("Espero poder te ajudar a resolver tudo e melhorar seu dia 💪")
             else:
-                pausa(f"Entendo, {nome}. Vamos cuidar do seu problema juntos 😉")
+                pausa(f"Ok, {nome}. Vamos cuidar do seu problema juntos 😉")
 
             state = "MENU_PROBLEMA"
 
