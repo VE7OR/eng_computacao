@@ -237,7 +237,5 @@ def main():
                 break
             else:
                 pausa("❌ Não entendi, digite 'sim' ou 'não'.")
-
-# CORREÇÃO: Esta linha estava com erro de sintaxe
 if __name__ == "__main__":
     main()
