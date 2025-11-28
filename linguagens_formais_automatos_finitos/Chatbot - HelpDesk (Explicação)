@@ -1,0 +1,23 @@
+Bot – Suporte Técnico
+
+1 – Introdução: 
+Este trabalho implementa um sistema de chatbot usando Autômatos Finitos Determinísticos (DFA) para modelar diálogos estruturados de suporte técnico. O sistema é baseado em estados e transições, onde cada estado representa uma etapa específica na conversa e as transições são acionadas pelas respostas do usuário.
+2 – Objetivo:
+Simular um diálogo estruturado de suporte técnico usando Deterministic Finite Automaton (DFA), onde cada transição entre estados é determinada exclusivamente pela entrada do usuário, criando um fluxo de conversação lógico e eficiente.
+
+3 - Modelagem:
+1: Saudação inicial
+2: Identificação do humor
+3: Seleção de categoria de problema
+4: Resolução passo a passo por categoria
+5: Escalonamento para suporte humano
+6: Finalização
+4 - Transições Baseadas em Entradas:
+As transições ocorrem baseadas em: Palavras-chave específicas, Seleção numérica de opções e Confirmações positivas/negativas
+5 - Vantagens Desta Abordagem
+1: Previsibilidade: Comportamento consistente e confiável
+2: Manutenibilidade: Fácil de entender e modificar
+3: Debugging: Histórico claro de estados e transições
+4: Performance: Processamento eficiente de transições
+5: Escalabilidade: Fácil adicionar novos estados e fluxos
+Este modelo é ideal para sistemas de suporte técnico, FAQs interativos e processos guiados onde o fluxo da conversa é bem definido e estruturado.
