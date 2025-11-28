@@ -8,13 +8,13 @@ def ask(prompt):
 
 def pausa(texto):
     """Simula um tempo de resposta do bot"""
-    print(texto)
+    print(f"\nBot: {texto}")
     time.sleep(5)
 
 def detectar_humor(texto):
     """Analisa o humor com base na resposta do usuário"""
-    humor_positivo = ["bem", "ótimo", "otimo", "beleza", "tranquilo", "show", "maravilha", "feliz", "excelente"]
-    humor_negativo = ["mal", "cansado", "triste", "ruim", "péssimo", "pessimo", "estressado", "irritado"]
+    humor_positivo = ["Sim", "Estou bem", "bem", "ótimo", "otimo", "tranquilo", "Estou feliz", "feliz", "bom"]
+    humor_negativo = ["Não", "mal", "cansado", "triste", "ruim", "péssimo", "pessimo", "estressado", "irritado", "ansioso", "preocupado"]
     for palavra in humor_positivo:
         if palavra in texto:
             return "positivo"
@@ -23,22 +23,101 @@ def detectar_humor(texto):
             return "negativo"
     return "neutro"
 
+class SolucaoManager:
+    """Gerencia as soluções passo a passo para cada problema"""
+    
+    def __init__(self):
+        self.solucoes = {
+            "internet": [
+                "🔌 Verifique se o cabo de rede está conectado firmemente ao computador e ao roteador",
+                "🔄 Reinicie o modem/roteador: desconecte da tomada por 30 segundos e conecte novamente",
+                "📱 Teste a internet em outro dispositivo para isolar o problema",
+                "🔍 Verifique se o adaptador Wi-Fi está habilitado nas configurações de rede",
+                "🛠️ Execute a solução de problemas de rede do Windows (ou equivalente)",
+                "📞 Entre em contato com seu provedor de internet para verificar se há problemas na região"
+            ],
+            "impressora": [
+                "🔌 Verifique se a impressora está ligada e todas as luzes estão acesas",
+                "🔗 Confirme se o cabo USB ou conexão de rede está firmemente conectado",
+                "📄 Verifique se há papel na bandeja e se não está emperrado",
+                "🖨️ Execute o utilitário de limpeza de bicos da impressora",
+                "🔧 Reinstale os drivers da impressora no computador",
+                "🔄 Atualize o firmware da impressora pelo site do fabricante"
+            ],
+            "login": [
+                "👁️ Verifique se o CAPS LOCK está desligado ao digitar a senha",
+                "🔄 Tente redefinir a senha usando a opção 'Esqueci minha senha'",
+                "🌐 Se é login online, verifique sua conexão com a internet",
+                "💻 Reinicie o computador e tente fazer login novamente",
+                "🔧 Use uma conta de administrador para verificar as permissões",
+                "👨‍💼 Contate o administrador do sistema para verificar bloqueios na conta"
+            ],
+            "desempenho": [
+                "📊 Feche programas e abas não utilizados para liberar memória RAM",
+                "🔍 Verifique o uso de recursos no Gerenciador de Tarefas (Ctrl+Shift+Esc)",
+                "🧹 Execute uma limpeza de disco para remover arquivos temporários",
+                "🛡️ Faça uma verificação completa de vírus e malware",
+                "⚙️ Desative programas que iniciam automaticamente com o Windows",
+                "💾 Considere adicionar mais memória RAM ou trocar para um SSD"
+            ],
+            "som": [
+                "🔊 Verifique se o volume não está mudo e aumente o nível",
+                "🎧 Teste com fones de ouvido para isolar o problema das caixas de som",
+                "🔌 Confirme se os cabos de áudio estão conectados corretamente",
+                "🔄 Reinicie o computador para restaurar os serviços de áudio",
+                "🔧 Atualize os drivers de áudio pelo Gerenciador de Dispositivos",
+                "🛠️ Execute o solucionador de problemas de áudio do Windows"
+            ],
+            "email": [
+                "🌐 Verifique sua conexão com a internet",
+                "🔐 Confirme se o usuário e senha estão corretos (cuidado com caps lock)",
+                "🔄 Tente acessar pelo navegador web em vez do aplicativo",
+                "📱 Teste em outro dispositivo ou aplicativo de e-mail",
+                "🗑️ Limpe o cache e os cookies do navegador",
+                "🔧 Verifique as configurações de servidor (POP/IMAP/SMTP)"
+            ],
+            "sistema": [
+                "🔄 Reinicie o computador para limpar a memória temporária",
+                "📥 Verifique e instale atualizações pendentes do Windows",
+                "🔍 Execute uma verificação de integridade do sistema (sfc /scannow)",
+                "💾 Verifique o espaço livre no disco rígido (mínimo 15% recomendado)",
+                "🛡️ Faça uma verificação completa de vírus e malware",
+                "⚙️ Restaure o sistema para um ponto anterior quando funcionava bem"
+            ]
+        }
+        self.passo_atual = 0
+        self.tipo_problema = None
+    
+    def reset(self):
+        self.passo_atual = 0
+        self.tipo_problema = None
+    
+    def proximo_passo(self):
+        if self.tipo_problema and self.passo_atual < len(self.solucoes[self.tipo_problema]):
+            passo = self.solucoes[self.tipo_problema][self.passo_atual]
+            self.passo_atual += 1
+            return passo
+        return None
+    
+    def tem_mais_solucoes(self):
+        return self.tipo_problema and self.passo_atual < len(self.solucoes[self.tipo_problema])
+
 def main():
     state = "SAUDACAO"
     nome = None
-    problema = {"tipo": None, "descricao": None, "solucao": None}
+    solucao_manager = SolucaoManager()
 
-    print("🧑‍💻 Iniciando atendimento do Bot Assistene...\n")
+    print("🧑‍💻 Iniciando atendimento do Bot Assistente...\n")
 
     while True:
         # ETAPA 1 – Pergunta o nome
         if state == "SAUDACAO":
             nome = input("Bot: Antes de começarmos, qual o seu nome?\n> ").strip().title()
             if nome:
-                pausa(f"\nBot: Olá {nome}, tudo bem? 👋")
+                pausa(f"Olá {nome}, tudo bem? 👋")
                 state = "RESPOSTA_SAUDACAO"
             else:
-                pausa("Bot: Por favor, digite um nome válido.")
+                pausa("Por favor, digite um nome válido.")
 
         # ETAPA 2 – Resposta ao cumprimento com detecção emocional
         elif state == "RESPOSTA_SAUDACAO":
@@ -46,19 +125,19 @@ def main():
             humor = detectar_humor(resposta)
 
             if humor == "positivo":
-                pausa(f"Bot: Que ótimo, {nome}! 😄 Fico feliz em saber que você está bem.")
-                pausa("Bot: Vamos ver em que posso te ajudar hoje!")
+                pausa(f"Que ótimo, {nome}! 😄 Fico feliz em saber que você está bem.")
+                pausa("Vamos ver em que posso te ajudar hoje!")
             elif humor == "negativo":
-                pausa(f"Bot: Poxa, {nome} 😔 Sinto muito em saber disso.")
-                pausa("Bot: Espero poder te ajudar a resolver tudo e melhorar seu dia 💪")
+                pausa(f"Poxa, {nome} 😔 Sinto muito em saber disso.")
+                pausa("Espero poder te ajudar a resolver tudo e melhorar seu dia 💪")
             else:
-                pausa(f"Bot: Entendo, {nome}. Vamos cuidar do seu problema juntos 😉")
+                pausa(f"Entendo, {nome}. Vamos cuidar do seu problema juntos 😉")
 
             state = "MENU_PROBLEMA"
 
         # ETAPA 3 – Menu de problemas
         elif state == "MENU_PROBLEMA":
-            pausa(f"\nBot: {nome}, com o que você precisa de ajuda hoje?")
+            pausa(f"{nome}, com o que você precisa de ajuda hoje?")
             print("""
 1️⃣ - Problema com a Internet
 2️⃣ - Problema com a Impressora
@@ -70,131 +149,95 @@ def main():
 """)
             opcao = ask("Digite o número da opção desejada (1 a 7)")
 
-            # Internet
-            if opcao == "1":
-                problema["tipo"] = "internet"
-                problema["solucao"] = (
-                    "🌐 Soluções possíveis:\n"
-                    "1️⃣ Verifique se o roteador está ligado.\n"
-                    "2️⃣ Reinicie o modem e aguarde 2 minutos.\n"
-                    "3️⃣ Teste em outro dispositivo."
-                )
-                pausa(f"Bot: Entendido, {nome}. É um problema de internet.")
-                state = "FORNECER_SOLUCAO"
+            problemas = {
+                "1": "internet",
+                "2": "impressora", 
+                "3": "login",
+                "4": "desempenho",
+                "5": "som",
+                "6": "email",
+                "7": "sistema"
+            }
 
-            # Impressora
-            elif opcao == "2":
-                problema["tipo"] = "impressora"
-                problema["solucao"] = (
-                    "🖨️ Soluções possíveis:\n"
-                    "1️⃣ Confira se a impressora está ligada e conectada.\n"
-                    "2️⃣ Verifique papel e tinta.\n"
-                    "3️⃣ Reinicie a impressora e tente novamente."
-                )
-                pausa(f"Bot: Certo, {nome}. Vamos resolver o problema com a impressora.")
-                state = "FORNECER_SOLUCAO"
-
-            # Login
-            elif opcao == "3":
-                problema["tipo"] = "login"
-                problema["solucao"] = (
-                    "🔑 Soluções possíveis:\n"
-                    "1️⃣ Verifique se o CAPS LOCK está desligado.\n"
-                    "2️⃣ Tente redefinir a senha.\n"
-                    "3️⃣ Contate o administrador se persistir."
-                )
-                pausa(f"Bot: Entendido, {nome}. É um problema de login.")
-                state = "FORNECER_SOLUCAO"
-
-            # Computador lento
-            elif opcao == "4":
-                problema["tipo"] = "desempenho"
-                problema["solucao"] = (
-                    "💻 Soluções possíveis:\n"
-                    "1️⃣ Feche programas desnecessários.\n"
-                    "2️⃣ Desative inicializações automáticas.\n"
-                    "3️⃣ Faça uma limpeza de disco ou verifique vírus."
-                )
-                pausa(f"Bot: Vamos ver como acelerar seu computador, {nome}.")
-                state = "FORNECER_SOLUCAO"
-
-            # Sem som
-            elif opcao == "5":
-                problema["tipo"] = "som"
-                problema["solucao"] = (
-                    "🔊 Soluções possíveis:\n"
-                    "1️⃣ Verifique se o volume está ativo.\n"
-                    "2️⃣ Confira se o cabo ou fone está conectado corretamente.\n"
-                    "3️⃣ Atualize o driver de áudio."
-                )
-                pausa(f"Bot: Ok, {nome}. Vamos corrigir o problema de som.")
-                state = "FORNECER_SOLUCAO"
-
-            # E-mail
-            elif opcao == "6":
-                problema["tipo"] = "email"
-                problema["solucao"] = (
-                    "📧 Soluções possíveis:\n"
-                    "1️⃣ Confira a conexão com a internet.\n"
-                    "2️⃣ Verifique usuário e senha.\n"
-                    "3️⃣ Teste o envio em outro navegador ou aplicativo."
-                )
-                pausa(f"Bot: Entendido, {nome}. Vamos ver o problema de e-mail.")
-                state = "FORNECER_SOLUCAO"
-
-            # Sistema Operacional
-            elif opcao == "7":
-                problema["tipo"] = "sistema"
-                problema["solucao"] = (
-                    "🧩 Soluções possíveis:\n"
-                    "1️⃣ Reinicie o computador.\n"
-                    "2️⃣ Verifique atualizações pendentes.\n"
-                    "3️⃣ Execute uma verificação de integridade do sistema."
-                )
-                pausa(f"Bot: Ok, {nome}. Vamos corrigir o travamento do sistema.")
-                state = "FORNECER_SOLUCAO"
-
+            if opcao in problemas:
+                solucao_manager.reset()
+                solucao_manager.tipo_problema = problemas[opcao]
+                state = "FORNECER_SOLUCAO_PASSO_A_PASSO"
             else:
-                pausa("❌ Bot: Não entendi, por favor digite um número entre 1 e 7.")
+                pausa("❌ Não entendi, por favor digite um número entre 1 e 7.")
                 continue
 
-        # ETAPA 4 – Exibe a solução
-        elif state == "FORNECER_SOLUCAO":
-            print(f"\nBot: Aqui estão algumas dicas que podem ajudar, {nome}:")
-            print(problema["solucao"])
-            txt = ask(f"\n{nome}, o problema foi resolvido? (sim/não)")
-            if "sim" in txt:
-                pausa(f"Bot: Que ótimo, {nome}! Fico feliz em ajudar 😄")
-                state = "FINALIZADO"
-            elif "não" in txt or "nao" in txt:
-                pausa(f"Bot: Entendido, {nome}. Deseja encaminhar o caso para o suporte avançado?")
+        # ETAPA 4 – Fornece soluções passo a passo
+        elif state == "FORNECER_SOLUCAO_PASSO_A_PASSO":
+            passo = solucao_manager.proximo_passo()
+            if passo:
+                pausa(f"Vamos tentar esta solução ({solucao_manager.passo_atual}/6):")
+                pausa(passo)
+                
+                # Aguarda um pouco para o usuário executar
+                time.sleep(2)
+                
+                resposta = ask("Conseguiu executar este passo? (sim/não)")
+                if "sim" in resposta:
+                    pausa("Ótimo! Vamos ver se resolveu o problema...")
+                    resposta_resolvido = ask("O problema foi resolvido? (sim/não)")
+                    
+                    if "sim" in resposta_resolvido:
+                        pausa(f"🎉 Excelente, {nome}! Que bom que consegui resolver! 😄")
+                        state = "FINALIZADO"
+                    else:
+                        if solucao_manager.tem_mais_solucoes():
+                            pausa("Entendo. Vamos tentar a próxima solução...")
+                            # Continua no mesmo estado para próximo passo
+                        else:
+                            pausa("😔 Infelizmente esgotamos todas as soluções automáticas.")
+                            state = "ESCALAR_SUPORTE"
+                else:
+                    pausa("Sem problemas. Vamos para a próxima alternativa...")
+                    if not solucao_manager.tem_mais_solucoes():
+                        pausa("😔 Infelizmente esgotamos todas as soluções automáticas.")
+                        state = "ESCALAR_SUPORTE"
+            else:
+                pausa("😔 Infelizmente esgotamos todas as soluções automáticas.")
                 state = "ESCALAR_SUPORTE"
-            else:
-                pausa("❌ Bot: Não entendi sua resposta, por favor digite 'sim' ou 'não'.")
 
-        # ETAPA 5 – Escalar para suporte
+        # ETAPA 5 – Escalar para suporte avançado
         elif state == "ESCALAR_SUPORTE":
-            txt = ask(f"{nome}, deseja que eu encaminhe para o suporte técnico? (sim/não)")
-            if "sim" in txt:
-                pausa(f"Bot: Chamado aberto para o suporte técnico, {nome}. Aguarde atendimento 👨‍💻")
+            pausa("📞 Para um atendimento mais personalizado, posso:")
+            print("""
+1️⃣ - Abrir um ticket de suporte técnico
+2️⃣ - Direcionar para atendimento via WhatsApp
+3️⃣ - Voltar ao menu principal
+""")
+            opcao = ask("Qual opção você prefere? (1, 2 ou 3)")
+            
+            if opcao == "1":
+                pausa(f"✅ Ticket aberto para {nome}! Nossa equipe entrará em contato em até 2 horas úteis.")
                 state = "FINALIZADO"
-            elif "não" in txt or "nao" in txt:
-                pausa(f"Bot: Tudo bem, {nome}. Se precisar, estarei por aqui 😉")
+            elif opcao == "2":
+                problema_desc = solucao_manager.tipo_problema if solucao_manager.tipo_problema else "problema técnico"
+                pausa(f"📱 Perfeito! Entre em contato pelo WhatsApp (55 62 99402-0436)")
+                pausa(f"💬 Ao enviar mensagem, informe: 'Atendimento Bot Assistente - {nome} - Problema: {problema_desc}'")
+                pausa("Nossa equipe te atenderá o mais rápido possível!")
                 state = "FINALIZADO"
+            elif opcao == "3":
+                pausa("Voltando ao menu principal...")
+                state = "MENU_PROBLEMA"
             else:
-                pausa("❌ Bot: Não entendi, responda com 'sim' ou 'não'.")
+                pausa("❌ Opção inválida. Por favor, escolha 1, 2 ou 3.")
 
         # ETAPA FINAL – Pergunta se deseja outro atendimento
         elif state == "FINALIZADO":
             resposta = ask(f"\n{nome}, deseja falar sobre outro problema? (sim/não)")
             if "sim" in resposta:
-                pausa(f"Bot: Perfeito, {nome}! Vamos lá novamente 💪")
+                pausa(f"Perfeito, {nome}! Vamos lá novamente 💪")
                 state = "MENU_PROBLEMA"
             elif "não" in resposta or "nao" in resposta:
-                pausa(f"Bot: Obrigado por usar o Bot Assistene, {nome}. Tenha um excelente dia! 👋")
+                pausa(f"Obrigado por usar o Bot Assistene, {nome}. Tenha um excelente dia! 👋")
                 break
             else:
-                pausa("❌ Bot: Não entendi, digite 'sim' ou 'não'.")
+                pausa("❌ Não entendi, digite 'sim' ou 'não'.")
 
+# CORREÇÃO: Esta linha estava com erro de sintaxe
 if __name__ == "__main__":
     main()
