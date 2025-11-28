@@ -9,7 +9,7 @@ def ask(prompt):
 def pausa(texto):
     """Simula um tempo de resposta do bot"""
     print(texto)
-    time.sleep(1)
+    time.sleep(5)
 
 def detectar_humor(texto):
     """Analisa o humor com base na resposta do usuário"""
